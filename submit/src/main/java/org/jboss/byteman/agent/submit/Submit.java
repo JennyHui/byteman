@@ -810,6 +810,10 @@ public class Submit {
         return submitRequest("GROOVY\n");
     }
 
+    private String findClass(String className) throws Exception {
+        return submitRequest("FINDCLASS\n" + className);
+    }
+
     private class Comm {
         private Socket commSocket;
         private BufferedReader commInput;
@@ -1007,7 +1011,7 @@ public class Submit {
                 groovysh = true;
                 startIdx++;
                 optionCount++;
-            } else{
+            } else {
                 break;
             }
         }
@@ -1027,8 +1031,8 @@ public class Submit {
         List<String> argsList = null;
 
         try {
-            if(groovysh) {
-               results = client.groovy();
+            if (groovysh) {
+                results = client.groovy();
             } else if (showVersion) {
                 String agentVersion = client.getAgentVersion();
                 String clientVersion = client.getClientVersion();
@@ -1075,7 +1079,9 @@ public class Submit {
                     for (int i = startIdx; i < maxIdx; i++) {
                         argsList.add(args[i]);
                     }
-                    if (addBoot) {
+                    if (findClass) {
+                        results = client.findClass(argsList.get(0));
+                    } else if (addBoot) {
                         results = client.addJarsToBootClassloader(argsList);
                     } else if (addSys) {
                         results = client.addJarsToSystemClassloader(argsList);
@@ -1117,7 +1123,6 @@ public class Submit {
             out.close();
         }
     }
-
 
 
     private static void usage(PrintStream out, int exitCode) {
