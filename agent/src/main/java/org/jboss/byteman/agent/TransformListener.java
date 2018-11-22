@@ -35,40 +35,37 @@ import java.io.PrintWriter;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
 import java.util.jar.JarFile;
 
+import groovy.lang.Binding;
+import groovy.lang.GroovyClassLoader;
+import me.bazhenov.groovysh.GroovyShellService;
+import org.codehaus.groovy.tools.shell.Groovysh;
+import org.codehaus.groovy.tools.shell.IO;
 import org.jboss.byteman.rule.Rule;
 import org.jboss.byteman.rule.helper.Helper;
 
 /**
  * a socket based listener class which reads scripts from stdin and installs them in the current runtime
  */
-public class TransformListener extends Thread
-{
+public class TransformListener extends Thread {
     public static int DEFAULT_PORT = 9091;
     public static String DEFAULT_HOST = "localhost";
     private static TransformListener theTransformListener = null;
     private static ServerSocket theServerSocket;
     private Retransformer retransformer;
 
-    private TransformListener(Retransformer retransformer)
-    {
+    private TransformListener(Retransformer retransformer) {
         this.retransformer = retransformer;
         setDaemon(true);
     }
 
-    public static synchronized boolean initialize(Retransformer retransformer)
-    {
+    public static synchronized boolean initialize(Retransformer retransformer) {
         return (initialize(retransformer, null, null));
     }
 
-    public static synchronized boolean initialize(Retransformer retransformer, String hostname, Integer port)
-    {
+    public static synchronized boolean initialize(Retransformer retransformer, String hostname, Integer port) {
         if (theTransformListener == null) {
             try {
                 if (hostname == null) {
@@ -95,32 +92,31 @@ public class TransformListener extends Thread
         return true;
     }
 
-    public static synchronized boolean terminate()
-    {
+    public static synchronized boolean terminate() {
         // we don't want the listener shutdown to be aborted because of triggered rules
         boolean enabled = true;
         try {
-        enabled = Rule.disableTriggersInternal();
+            enabled = Rule.disableTriggersInternal();
 
-        if (theTransformListener != null) {
-            try {
-                theServerSocket.close();
-                Helper.verbose("TransformListener() :  closing port " + DEFAULT_PORT);
+            if (theTransformListener != null) {
+                try {
+                    theServerSocket.close();
+                    Helper.verbose("TransformListener() :  closing port " + DEFAULT_PORT);
 
-            } catch (IOException e) {
-                // ignore -- the thread should exit anyway
+                } catch (IOException e) {
+                    // ignore -- the thread should exit anyway
+                }
+                try {
+                    theTransformListener.join();
+                } catch (InterruptedException e) {
+                    // ignore
+                }
+
+                theTransformListener = null;
+                theServerSocket = null;
             }
-            try {
-                theTransformListener.join();
-            } catch (InterruptedException e) {
-                // ignore
-            }
 
-            theTransformListener = null;
-            theServerSocket = null;
-        }
-
-        return true;
+            return true;
         } finally {
             if (enabled) {
                 Rule.enableTriggersInternal();
@@ -129,8 +125,7 @@ public class TransformListener extends Thread
     }
 
     @Override
-    public void run()
-    {
+    public void run() {
         // we don't want to see any triggers in the listener thread
 
         Rule.disableTriggersInternal();
@@ -165,8 +160,7 @@ public class TransformListener extends Thread
         }
     }
 
-    private void handleConnection(Socket socket)
-    {
+    private void handleConnection(Socket socket) {
         InputStream is = null;
         try {
             is = socket.getInputStream();
@@ -240,6 +234,10 @@ public class TransformListener extends Thread
                 listSystemProperties(in, out);
             } else if (line.equals("SETSYSPROPS")) {
                 setSystemProperties(in, out);
+            } else if (line.equals("FINDCLASS")) {
+                findClass(in, out);
+            } else if (line.equals("GROOVY")) {
+                groovy(in, out);
             } else {
                 out.println("ERROR");
                 out.println("Unexpected command " + line);
@@ -259,6 +257,32 @@ public class TransformListener extends Thread
         }
     }
 
+    private void groovy(BufferedReader in, PrintWriter out) throws IOException {
+        GroovyShellService service = new GroovyShellService();
+        service.setPort(7789);
+        service.setBindings(new HashMap<String, Object>() {{
+            put("inst", retransformer.inst);
+        }});
+
+        service.start();
+        out.println("OK");
+        out.flush();
+    }
+
+    private void findClass(BufferedReader in, PrintWriter out) throws IOException {
+        String line = in.readLine().trim();
+        Class[] allLoadedClasses = retransformer.inst.getAllLoadedClasses();
+        for (int i = 0; i < allLoadedClasses.length; i++) {
+            Class clazz = allLoadedClasses[i];
+            if (clazz.getName().toUpperCase().contains(line.toUpperCase())) {
+                out.println(clazz.getName());
+            }
+        }
+        out.println("OK");
+        out.flush();
+    }
+
+
     private void getVersion(BufferedReader in, PrintWriter out) {
         String version = this.getClass().getPackage().getImplementationVersion();
         if (version == null) {
@@ -269,13 +293,11 @@ public class TransformListener extends Thread
         out.flush();
     }
 
-    private void loadScripts(BufferedReader in, PrintWriter out) throws IOException
-    {
+    private void loadScripts(BufferedReader in, PrintWriter out) throws IOException {
         handleScripts(in, out, false);
     }
 
-    private void loadJars(BufferedReader in, PrintWriter out, boolean isBoot) throws IOException
-    {
+    private void loadJars(BufferedReader in, PrintWriter out, boolean isBoot) throws IOException {
         final String endMarker = (isBoot) ? "ENDBOOT" : "ENDSYS";
         String line = in.readLine().trim();
         while (line != null && !line.equals(endMarker)) {
@@ -299,13 +321,11 @@ public class TransformListener extends Thread
         out.flush();
     }
 
-    private void deleteScripts(BufferedReader in, PrintWriter out) throws IOException
-    {
+    private void deleteScripts(BufferedReader in, PrintWriter out) throws IOException {
         handleScripts(in, out, true);
     }
 
-    private void handleScripts(BufferedReader in, PrintWriter out, boolean doDelete) throws IOException
-    {
+    private void handleScripts(BufferedReader in, PrintWriter out, boolean doDelete) throws IOException {
         List<String> scripts = new LinkedList<String>();
         List<String> scriptNames = new LinkedList<String>();
 
@@ -313,7 +333,7 @@ public class TransformListener extends Thread
         String scriptName = "<unknown>";
         while (line.startsWith("SCRIPT ")) {
             StringBuffer stringBuffer = new StringBuffer();
-            scriptName  = line.substring("SCRIPT ".length());
+            scriptName = line.substring("SCRIPT ".length());
             line = in.readLine();
             while (line != null && !line.equals("ENDSCRIPT")) {
                 stringBuffer.append(line);
@@ -360,22 +380,19 @@ public class TransformListener extends Thread
         out.flush();
     }
 
-    private void purgeScripts(BufferedReader in, PrintWriter out) throws Exception
-    {
+    private void purgeScripts(BufferedReader in, PrintWriter out) throws Exception {
         retransformer.removeScripts(null, out);
         out.println("OK");
         out.flush();
     }
 
-    private void listScripts(BufferedReader in, PrintWriter out) throws Exception
-    {
+    private void listScripts(BufferedReader in, PrintWriter out) throws Exception {
         retransformer.listScripts(out);
         out.println("OK");
         out.flush();
     }
 
-    private void listBootJars(BufferedReader in, PrintWriter out) throws Exception
-    {
+    private void listBootJars(BufferedReader in, PrintWriter out) throws Exception {
         Set<String> jars = retransformer.getLoadedBootJars();
         for (String jar : jars) {
             out.println(new File(jar).getAbsolutePath());
@@ -384,8 +401,7 @@ public class TransformListener extends Thread
         out.flush();
     }
 
-    private void listSystemJars(BufferedReader in, PrintWriter out) throws Exception
-    {
+    private void listSystemJars(BufferedReader in, PrintWriter out) throws Exception {
         Set<String> jars = retransformer.getLoadedSystemJars();
         for (String jar : jars) {
             out.println(new File(jar).getAbsolutePath());
@@ -394,8 +410,7 @@ public class TransformListener extends Thread
         out.flush();
     }
 
-    private void listSystemProperties(BufferedReader in, PrintWriter out) throws Exception
-    {
+    private void listSystemProperties(BufferedReader in, PrintWriter out) throws Exception {
         Properties sysProps = System.getProperties();
         boolean strictMode = false;
         if (Boolean.parseBoolean(sysProps.getProperty(Transformer.SYSPROPS_STRICT_MODE, "true"))) {
@@ -405,16 +420,15 @@ public class TransformListener extends Thread
         for (Map.Entry<Object, Object> entry : sysProps.entrySet()) {
             String name = entry.getKey().toString();
             if (!strictMode || name.startsWith("org.jboss.byteman.")) {
-               String value = entry.getValue().toString();
-               out.println(name + "=" + value.replace("\n", "\\n").replace("\r", "\\r"));
+                String value = entry.getValue().toString();
+                out.println(name + "=" + value.replace("\n", "\\n").replace("\r", "\\r"));
             }
         }
         out.println("OK");
         out.flush();
     }
 
-    private void setSystemProperties(BufferedReader in, PrintWriter out) throws Exception
-    {
+    private void setSystemProperties(BufferedReader in, PrintWriter out) throws Exception {
         boolean strictMode = false;
         if (Boolean.parseBoolean(System.getProperty(Transformer.SYSPROPS_STRICT_MODE, "true"))) {
             strictMode = true;
@@ -425,7 +439,7 @@ public class TransformListener extends Thread
         while (line != null && !line.equals(endMarker)) {
             try {
                 String[] nameValuePair = line.split("=", 2);
-                if (nameValuePair.length != 2 ) {
+                if (nameValuePair.length != 2) {
                     throw new Exception("missing '='");
                 }
                 String name = nameValuePair[0];
@@ -440,12 +454,12 @@ public class TransformListener extends Thread
 
                 // everything looks good and we are allowed to set the system property now
                 if (value.length() > 0) {
-                	// "some.sys.prop=" means the client wants to delete the system property
-                	System.setProperty(name, value);
-                	out.append("Set system property [" + name + "] to value [" + value + "]\n");
+                    // "some.sys.prop=" means the client wants to delete the system property
+                    System.setProperty(name, value);
+                    out.append("Set system property [" + name + "] to value [" + value + "]\n");
                 } else {
-                	System.clearProperty(name);
-                	out.append("Deleted system property [" + name + "]\n");
+                    System.clearProperty(name);
+                    out.append("Deleted system property [" + name + "]\n");
                 }
                 // ok, now tell the transformer a property has changed
                 retransformer.updateConfiguration(name);

@@ -2452,5 +2452,15 @@
             <artifactId>byteman-submit</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>me.bazhenov.groovy-shell</groupId>
+            <artifactId>groovy-shell-server</artifactId>
+            <version>2.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-groovysh</artifactId>
+            <version>2.5.4</version>
+        </dependency>
     </dependencies>
 </project>

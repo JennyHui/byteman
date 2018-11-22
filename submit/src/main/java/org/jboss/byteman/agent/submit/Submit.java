@@ -25,6 +25,8 @@
 
 package org.jboss.byteman.agent.submit;
 
+import com.sun.net.httpserver.HttpServer;
+
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -41,14 +43,13 @@ import java.util.regex.Pattern;
  * This object provides a means by which you communicate with the Byteman agent at runtime allowing loading,
  * reloading, unloading of rules and listing of the current rule set and any successful or failed attempts
  * to inject, parse and typecheck the rules.
- *
+ * <p>
  * Note that this class is completely standalone and has no dependencies on any other Byteman class.
  * It can be shipped alone in a client jar to be used as a very small app.
  */
-public class Submit
-{
+public class Submit {
     public static final String DEFAULT_ADDRESS = "localhost";
-    public static final int DEFAULT_PORT= 9091;
+    public static final int DEFAULT_PORT = 9091;
 
     private final int port;
     private final String address;
@@ -67,12 +68,10 @@ public class Submit
      * Create a client that will connect to a Byteman agent on the given host
      * and port and writing output to System.out.
      *
-     * @param address
-     *            the hostname or IP address of the machine where Byteman agent
-     *            is located. If <code>null</code>, the default host is used.
-     * @param port
-     *            the port that the Byteman agent is listening to.
-     *            If 0 or less, the default port is used.
+     * @param address the hostname or IP address of the machine where Byteman agent
+     *                is located. If <code>null</code>, the default host is used.
+     * @param port    the port that the Byteman agent is listening to.
+     *                If 0 or less, the default port is used.
      */
     public Submit(String address, int port) {
         this(address, port, System.out);
@@ -82,14 +81,11 @@ public class Submit
      * Create a client that will connect to a Byteman agent on the given host
      * and port and writing output to System.out.
      *
-     * @param address
-     *            the hostname or IP address of the machine where Byteman agent
-     *            is located. If <code>null</code>, the default host is used.
-     * @param port
-     *            the port that the Byteman agent is listening to.
-     *            If 0 or less, the default port is used.
-     * @param out
-     *            the print stream used for writing output
+     * @param address the hostname or IP address of the machine where Byteman agent
+     *                is located. If <code>null</code>, the default host is used.
+     * @param port    the port that the Byteman agent is listening to.
+     *                If 0 or less, the default port is used.
+     * @param out     the print stream used for writing output
      */
     public Submit(String address, int port, PrintStream out) {
         if (address == null) {
@@ -111,7 +107,7 @@ public class Submit
 
     /**
      * @return identifies the host where this client expects a Byteman agent to
-     *         be running.
+     * be running.
      */
     public String getAddress() {
         return this.address;
@@ -119,7 +115,7 @@ public class Submit
 
     /**
      * @return the port that this client expects a Byteman agent to be listening
-     *         to on the given {@link #getAddress() host}.
+     * to on the given {@link #getAddress() host}.
      */
     public int getPort() {
         return this.port;
@@ -129,9 +125,7 @@ public class Submit
      * Returns the version of the remote Byteman agent.
      *
      * @return the version of the remote Byteman agent
-     *
-     * @throws Exception
-     *             if the request failed
+     * @throws Exception if the request failed
      */
     public String getAgentVersion() throws Exception {
         String version = submitRequest("VERSION\n");
@@ -142,9 +136,7 @@ public class Submit
      * Returns the version of this Byteman submit client.
      *
      * @return the version of the submit client, or <code>null</code> if unknown
-     *
-     * @throws Exception
-     *             if the request failed
+     * @throws Exception if the request failed
      */
     public String getClientVersion() throws Exception {
         return this.getClass().getPackage().getImplementationVersion();
@@ -156,9 +148,7 @@ public class Submit
      * byte-code will be invoked.
      *
      * @return the results of the delete-all request to the Byteman agent
-     *
-     * @throws Exception
-     *             if the request failed
+     * @throws Exception if the request failed
      */
     public String deleteAllRules() throws Exception {
         return submitRequest("DELETEALL\n");
@@ -168,9 +158,7 @@ public class Submit
      * Tells the Byteman agent to list all deployed rules.
      *
      * @return all the rules deployed in the Byteman agent
-     *
-     * @throws Exception
-     *             if the request failed
+     * @throws Exception if the request failed
      */
     public String listAllRules() throws Exception {
         return submitRequest("LIST\n");
@@ -183,12 +171,10 @@ public class Submit
      * or rule file, has a set of rules associated with it.
      *
      * @return all the scripts deployed in the Byteman agent
-     *         the keys are the script names (typically this is
-     *         the filenames where the rule definitions were found);
-     *         the values are the rule definitions in the scripts
-     *
-     * @throws Exception
-     *             if the request failed
+     * the keys are the script names (typically this is
+     * the filenames where the rule definitions were found);
+     * the values are the rule definitions in the scripts
+     * @throws Exception if the request failed
      */
     public List<ScriptText> getAllScripts() throws Exception {
         // we use this to retain the order in which script file names occur
@@ -268,12 +254,12 @@ public class Submit
 
     /**
      * old version which returns a map rather than a list of scripts
+     *
      * @return as above but as a map
-     * @throws Exception
-     *             if the request failed
+     * @throws Exception if the request failed
      */
     @Deprecated
-    public Map<String,String> getAllRules() throws Exception {
+    public Map<String, String> getAllRules() throws Exception {
         Map<String, String> rulesByScript = new HashMap<String, String>();
 
         Pattern scriptHeaderPattern = Pattern.compile("# File (.*) line \\d+\\s*");
@@ -343,16 +329,13 @@ public class Submit
      * as an individual string within the returned list.
      * The returned list will be ordered - that is, the first
      * rule in the list is the first rule encountered in the script.
-     *
+     * <p>
      * One usage of this method is to pass in map values from the results
      * of {@link #getAllScripts()} in case you need the scripts' individual rules.
      *
-     * @param scriptContent
-     *            the actual content of a script (i.e. the rule definitions)
-     *
+     * @param scriptContent the actual content of a script (i.e. the rule definitions)
      * @return all the rule definitions found in the given script
-     * @throws Exception
-     *         if an string processing error occurs
+     * @throws Exception if an string processing error occurs
      */
     public List<String> splitAllRulesFromScript(String scriptContent) throws Exception {
         List<String> rules = new ArrayList<String>();
@@ -413,13 +396,9 @@ public class Submit
      * Given the content of an individual rule definition, this will
      * return the name of that rule.
      *
-     * @param ruleDefinition
-     *            the actual content of an individual rule
-     *
+     * @param ruleDefinition the actual content of an individual rule
      * @return the name of the given rule, or <code>null</code> if it could not be determined
-     *
-     * @throws Exception
-     *             if the name cannot be determined
+     * @throws Exception if the name cannot be determined
      */
     public String determineRuleName(String ruleDefinition) throws Exception {
         Pattern ruleNamePattern = Pattern.compile("\\s*RULE\\s+(.+)\\s*");
@@ -443,13 +422,9 @@ public class Submit
      * machine, the paths must resolve on that remote host (i.e. the file must
      * exist on the remote machine at the paths given to this method).
      *
-     * @param jarPaths
-     *            the paths to the library .jar files that will be loaded
-     *
+     * @param jarPaths the paths to the library .jar files that will be loaded
      * @return the result of the load as reported by Byteman
-     *
-     * @throws Exception
-     *             if the request failed
+     * @throws Exception if the request failed
      */
     public String addJarsToBootClassloader(List<String> jarPaths) throws Exception {
         if (jarPaths == null || jarPaths.size() == 0) {
@@ -471,13 +446,9 @@ public class Submit
      * machine, the paths must resolve on that remote host (i.e. the file must
      * exist on the remote machine at the paths given to this method).
      *
-     * @param jarPaths
-     *            the paths to the library .jar files that will be loaded
-     *
+     * @param jarPaths the paths to the library .jar files that will be loaded
      * @return the result of the load as reported by Byteman
-     *
-     * @throws Exception
-     *             if the request failed
+     * @throws Exception if the request failed
      */
     public String addJarsToSystemClassloader(List<String> jarPaths) throws Exception {
         if (jarPaths == null || jarPaths.size() == 0) {
@@ -497,9 +468,7 @@ public class Submit
      * Returns a list of jars that were added to the Byteman agent's boot classloader.
      *
      * @return list of jars that were added to the boot classloader
-     *
-     * @throws Exception
-     *             if the request failed
+     * @throws Exception if the request failed
      */
     public List<String> getLoadedBootClassloaderJars() throws Exception {
         String results = submitRequest("LISTBOOT\n");
@@ -517,9 +486,7 @@ public class Submit
      * Returns a list of jars that were added to the Byteman agent's system classloader.
      *
      * @return list of jars that were added to the system classloader
-     *
-     * @throws Exception
-     *             if the request failed
+     * @throws Exception if the request failed
      */
     public List<String> getLoadedSystemClassloaderJars() throws Exception {
         String results = submitRequest("LISTSYS\n");
@@ -541,14 +508,10 @@ public class Submit
      * client is running (i.e. the files are not loaded directly by the Byteman
      * agent).
      *
-     * @param filePaths
-     *            the local files containing the rule definitions to be deployed
-     *            to Byteman
-     *
+     * @param filePaths the local files containing the rule definitions to be deployed
+     *                  to Byteman
      * @return the results of the deployment
-     *
-     * @throws Exception
-     *             if the request failed
+     * @throws Exception if the request failed
      */
     public String addRulesFromFiles(List<String> filePaths) throws Exception {
         List<ScriptText> scripts = getRulesFromRuleFiles(filePaths);
@@ -559,17 +522,13 @@ public class Submit
      * Deploys rules into Byteman, where the rule definitions are found in the
      * given streams. Rule definitions are read from the streams and the rule
      * text uploaded directly to the Byteman agent.
-     *
+     * <p>
      * This method is useful for using rules files from the classpath.
      *
-     * @param resourceStreams
-     * input streams containing the rule definitions to be deployed
-     * to Byteman
-     *
+     * @param resourceStreams input streams containing the rule definitions to be deployed
+     *                        to Byteman
      * @return the results of the deployment
-     *
-     * @throws Exception
-     *           if the request failed
+     * @throws Exception if the request failed
      */
     public String addRulesFromResources(List<InputStream> resourceStreams) throws Exception {
         List<ScriptText> scripts = getRulesFromRuleStreams(resourceStreams);
@@ -579,13 +538,9 @@ public class Submit
     /**
      * Deploys rule scripts into Byteman
      *
-     * @param scripts
-     *            scripts to be deployed to Byteman
-     *
+     * @param scripts scripts to be deployed to Byteman
      * @return the results of the deployment
-     *
-     * @throws Exception
-     *             if the request failed
+     * @throws Exception if the request failed
      */
     public String addScripts(List<ScriptText> scripts) throws Exception {
         if (scripts == null || scripts.size() == 0) {
@@ -605,13 +560,13 @@ public class Submit
 
     /**
      * old version which uses a Map
+     *
      * @param rules the rules to be added
      * @return the results of the deployment
-     * @throws Exception
-     *             if the request failed
+     * @throws Exception if the request failed
      */
     @Deprecated
-    public String addRules(Map<String,String> rules) throws Exception {
+    public String addRules(Map<String, String> rules) throws Exception {
         if (rules == null || rules.size() == 0) {
             return "";
         }
@@ -635,14 +590,10 @@ public class Submit
      * where this client is running (i.e. the files are not read directly by the
      * Byteman agent).
      *
-     * @param filePaths
-     *            the local files containing the rule definitions to be deleted
-     *            from Byteman
-     *
+     * @param filePaths the local files containing the rule definitions to be deleted
+     *                  from Byteman
      * @return the results of the deletion
-     *
-     * @throws Exception
-     *             if the request failed
+     * @throws Exception if the request failed
      */
     public String deleteRulesFromFiles(List<String> filePaths) throws Exception {
         List<ScriptText> scripts = getRulesFromRuleFiles(filePaths);
@@ -653,17 +604,13 @@ public class Submit
      * Deletes rules from Byteman, where the rule definitions are found in the
      * given streams. Rule definitions are read from the streams so that details
      * of which rules to unload can be uploaded directly to the Byteman agent.
-     *
+     * <p>
      * This method is useful for using rules files from the classpath.
      *
-     * @param resourceStreams
-     * the URLS to files containing the rule definitions to be deleted
-     * from Byteman
-     *
+     * @param resourceStreams the URLS to files containing the rule definitions to be deleted
+     *                        from Byteman
      * @return the results of the deletion
-     *
-     * @throws Exception
-     * if the request failed
+     * @throws Exception if the request failed
      */
     public String deleteRulesFromResources(List<InputStream> resourceStreams) throws Exception {
         List<ScriptText> scripts = getRulesFromRuleStreams(resourceStreams);
@@ -673,13 +620,9 @@ public class Submit
     /**
      * Deletes rules from Byteman.
      *
-     * @param scripts
-     *            rule scripts to be deleted from Byteman
-     *
+     * @param scripts rule scripts to be deleted from Byteman
      * @return the results of the deletion
-     *
-     * @throws Exception
-     *             if the request failed
+     * @throws Exception if the request failed
      */
     public String deleteScripts(List<ScriptText> scripts) throws Exception {
         if (scripts == null || scripts.size() == 0) {
@@ -699,13 +642,13 @@ public class Submit
 
     /**
      * old version which uses a Map
+     *
      * @param rules the rules to be deleted
      * @return the results of the deletion
-     * @throws Exception
-     *             if the request failed
+     * @throws Exception if the request failed
      */
     @Deprecated
-    public String deleteRules(Map<String,String> rules) throws Exception {
+    public String deleteRules(Map<String, String> rules) throws Exception {
         if (rules == null || rules.size() == 0) {
             return "";
         }
@@ -719,18 +662,15 @@ public class Submit
 
         return submitRequest(str.toString());
     }
+
     /**
      * Sets system properties in the Byteman agent VM.
      * If Byteman was configured for strict mode, only Byteman related
      * system properties will be allowed to be set.
      *
-     * @param propsToSet
-     *            system properties to set in the Byteman agent VM
-     *
+     * @param propsToSet system properties to set in the Byteman agent VM
      * @return response from the Byteman agent
-     *
-     * @throws Exception
-     *             if the request failed
+     * @throws Exception if the request failed
      */
     public String setSystemProperties(Properties propsToSet) throws Exception {
         if (propsToSet == null || propsToSet.size() == 0) {
@@ -752,9 +692,7 @@ public class Submit
      * system properties will be returned.
      *
      * @return system properties defined in the Byteman agent VM
-     *
-     * @throws Exception
-     *             if the request failed
+     * @throws Exception if the request failed
      */
     public Properties listSystemProperties() throws Exception {
         String results = submitRequest("LISTSYSPROPS\n");
@@ -775,13 +713,9 @@ public class Submit
     /**
      * Submits the generic request string to the Byteman agent for processing.
      *
-     * @param request
-     *            the request to submit
-     *
+     * @param request the request to submit
      * @return the response that the Byteman agent replied with
-     *
-     * @throws Exception
-     *             if the request failed
+     * @throws Exception if the request failed
      */
     public String submitRequest(String request) throws Exception {
         Comm comm = new Comm(this.address, this.port);
@@ -801,7 +735,7 @@ public class Submit
         List<ScriptText> scripts = new ArrayList<ScriptText>(streams.size());
 
         for (InputStream is : streams) {
-            
+
             // read in the current rule file
             try {
                 InputStreamReader reader = new InputStreamReader(is);
@@ -870,6 +804,10 @@ public class Submit
             return false;
         }
         return true;
+    }
+
+    private String groovy() throws Exception {
+        return submitRequest("GROOVY\n");
     }
 
     private class Comm {
@@ -972,10 +910,10 @@ public class Submit
 
     /**
      * A main routine which submits requests to the Byteman agent utilizing the Java API.
+     *
      * @param args see {@link #usage(PrintStream, int)} for a description of the allowed arguments
      */
-    public static void main(String[] args)
-    {
+    public static void main(String[] args) {
         String outfile = null;
         int port = DEFAULT_PORT;
         String hostname = DEFAULT_ADDRESS;
@@ -987,13 +925,15 @@ public class Submit
         boolean showVersion = false;
         boolean showAddedClassloaderJars = false;
         boolean sysProps = false;
+        boolean findClass = false;
+        boolean groovysh = false;
         int optionCount = 0;
         PrintStream out = System.out;
 
         while (startIdx < maxIdx && args[startIdx].startsWith("-")) {
             if (maxIdx >= startIdx + 2 && args[startIdx].equals("-o")) {
-                outfile = args[startIdx+1];
-                File file =  new File(outfile);
+                outfile = args[startIdx + 1];
+                File file = new File(outfile);
                 if (file.exists()) {
                     // open for append
                     if (file.isDirectory() || !file.canWrite()) {
@@ -1002,7 +942,7 @@ public class Submit
                     }
                     FileOutputStream fos = null;
                     try {
-                        fos =  new FileOutputStream(file, true);
+                        fos = new FileOutputStream(file, true);
                     } catch (FileNotFoundException e) {
                         out.println("Submit : error opening output file " + outfile);
                     }
@@ -1010,7 +950,7 @@ public class Submit
                 } else {
                     FileOutputStream fos = null;
                     try {
-                        fos =  new FileOutputStream(file, true);
+                        fos = new FileOutputStream(file, true);
                     } catch (FileNotFoundException e) {
                         out.println("Submit : error opening output file " + outfile);
                     }
@@ -1019,18 +959,18 @@ public class Submit
                 startIdx += 2;
             } else if (maxIdx >= startIdx + 2 && args[startIdx].equals("-p")) {
                 try {
-                    port = Integer.valueOf(args[startIdx+1]);
+                    port = Integer.valueOf(args[startIdx + 1]);
                 } catch (NumberFormatException e) {
-                    out.println("Submit : invalid port " + args[startIdx+1]);
+                    out.println("Submit : invalid port " + args[startIdx + 1]);
                     System.exit(1);
                 }
                 if (port <= 0) {
-                    out.println("Submit : invalid port " + args[startIdx+1]);
+                    out.println("Submit : invalid port " + args[startIdx + 1]);
                     System.exit(1);
                 }
                 startIdx += 2;
             } else if (maxIdx >= startIdx + 2 && args[startIdx].equals("-h")) {
-                hostname = args[startIdx+1];
+                hostname = args[startIdx + 1];
                 startIdx += 2;
             } else if (args[startIdx].equals("-u")) {
                 deleteRules = true;
@@ -1041,25 +981,33 @@ public class Submit
                 optionCount++;
             } else if (args[startIdx].equals("-b")) {
                 addBoot = true;
-                startIdx ++;
+                startIdx++;
                 optionCount++;
             } else if (args[startIdx].equals("-v")) {
                 showVersion = true;
-                startIdx ++;
+                startIdx++;
                 optionCount++;
             } else if (args[startIdx].equals("-c")) {
                 showAddedClassloaderJars = true;
-                startIdx ++;
+                startIdx++;
                 optionCount++;
             } else if (args[startIdx].equals("-s")) {
                 addSys = true;
-                startIdx ++;
+                startIdx++;
                 optionCount++;
             } else if (args[startIdx].equals("-y")) {
                 sysProps = true;
                 startIdx++;
                 optionCount++;
-            } else {
+            } else if (args[startIdx].equals("-f")) {
+                findClass = true;
+                startIdx++;
+                optionCount++;
+            } else if (args[startIdx].equals("-g")) {
+                groovysh = true;
+                startIdx++;
+                optionCount++;
+            } else{
                 break;
             }
         }
@@ -1079,7 +1027,9 @@ public class Submit
         List<String> argsList = null;
 
         try {
-            if (showVersion) {
+            if(groovysh) {
+               results = client.groovy();
+            } else if (showVersion) {
                 String agentVersion = client.getAgentVersion();
                 String clientVersion = client.getClientVersion();
                 results = "Agent Version: " + agentVersion + "\nClient Version: " + clientVersion;
@@ -1168,13 +1118,16 @@ public class Submit
         }
     }
 
-    private static void usage(PrintStream out, int exitCode)
-    {
+
+
+    private static void usage(PrintStream out, int exitCode) {
         out.println("usage : Submit [-o outfile] [-p port] [-h hostname] [-l|-u] [scriptfile . . .]");
         out.println("        Submit [-o outfile] [-p port] [-h hostname] [-b|-s] jarfile . . .");
         out.println("        Submit [-o outfile] [-p port] [-h hostname] [-c]");
         out.println("        Submit [-o outfile] [-p port] [-h hostname] [-y] [prop1[=[value1]]. . .]");
         out.println("        Submit [-o outfile] [-p port] [-h hostname] [-v]");
+        out.println("        Submit [-o outfile] [-p port] [-h hostname] [-f] classname");
+        out.println("        Submit [-o outfile] [-p port] [-h hostname] [-g]");
         out.println("        -o redirects output from System.out to outfile");
         out.println("        -p specifies listener port");
         out.println("        -h specifies listener host");
@@ -1191,6 +1144,9 @@ public class Submit
         out.println("             prop= sets system property 'prop' to an empty string");
         out.println("             prop unsets system property 'prop'");
         out.println("        -v prints the version of the byteman agent and this client");
+        out.println("        -f find loaded class with name");
+        out.println("        -g open groovy shell");
+
         if (out != System.out) {
             out.close();
         }
