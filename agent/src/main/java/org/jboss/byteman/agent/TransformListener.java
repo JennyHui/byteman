@@ -244,7 +244,7 @@ public class TransformListener extends Thread {
                 out.println("OK");
                 out.flush();
             }
-        } catch (Exception e) {
+        } catch (Throwable e) {
             Helper.err("TransformListener.run : exception " + e + " processing command " + line);
             Helper.errTraceException(e);
         } finally {
@@ -260,21 +260,25 @@ public class TransformListener extends Thread {
     private void groovy(BufferedReader in, PrintWriter out) throws IOException {
         GroovyShellService service = new GroovyShellService();
         service.setPort(7789);
+        service.setHost("0.0.0.0");
         service.setBindings(new HashMap<String, Object>() {{
             put("inst", retransformer.inst);
         }});
 
         service.start();
+        out.println("Groovy Sshd Shell Server listen on port 7789");
         out.println("OK");
         out.flush();
     }
 
     private void findClass(BufferedReader in, PrintWriter out) throws IOException {
         String line = in.readLine().trim();
+        System.out.println("read Line ==" + line);
         Class[] allLoadedClasses = retransformer.inst.getAllLoadedClasses();
         for (int i = 0; i < allLoadedClasses.length; i++) {
             Class clazz = allLoadedClasses[i];
             if (clazz.getName().toUpperCase().contains(line.toUpperCase())) {
+                System.out.println(clazz.getName());
                 out.println(clazz.getName());
             }
         }

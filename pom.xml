@@ -104,7 +104,8 @@
         <pushChanges>false</pushChanges>
         <autoVersionSubmodules>true</autoVersionSubmodules>
         <!-- for testing: command line args to enable debugger and verbose trace -->
-        <debug.args>-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5005 -Dorg.jboss.byteman.verbose</debug.args>
+        <debug.args>-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5005 -Dorg.jboss.byteman.verbose
+        </debug.args>
         <!-- asm release version to use -->
         <asm.version>7.0</asm.version>
     </properties>
@@ -112,24 +113,24 @@
     <dependencyManagement>
         <dependencies>
 
-             <!-- Internal dependencies -->
-             <dependency>
-                 <groupId>org.jboss.byteman</groupId>
-                 <artifactId>byteman</artifactId>
-                 <version>${project.version}</version>
-             </dependency>
-             <dependency>
-                 <groupId>org.jboss.byteman</groupId>
-                 <artifactId>byteman</artifactId>
-                 <version>${project.version}</version>
-                 <classifier>sources</classifier>
-             </dependency>
-             <dependency>
-                 <groupId>org.jboss.byteman</groupId>
-                 <artifactId>byteman</artifactId>
-                 <version>${project.version}</version>
-                 <classifier>javadoc</classifier>
-             </dependency>
+            <!-- Internal dependencies -->
+            <dependency>
+                <groupId>org.jboss.byteman</groupId>
+                <artifactId>byteman</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.byteman</groupId>
+                <artifactId>byteman</artifactId>
+                <version>${project.version}</version>
+                <classifier>sources</classifier>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.byteman</groupId>
+                <artifactId>byteman</artifactId>
+                <version>${project.version}</version>
+                <classifier>javadoc</classifier>
+            </dependency>
             <dependency>
                 <groupId>org.jboss.byteman</groupId>
                 <artifactId>byteman-agent</artifactId>
@@ -169,150 +170,150 @@
                 <version>${project.version}</version>
                 <classifier>sources</classifier>
             </dependency>
-             <dependency>
-                 <groupId>org.jboss.byteman</groupId>
-                 <artifactId>byteman-submit</artifactId>
-                 <version>${project.version}</version>
-             </dependency>
-             <dependency>
-                 <groupId>org.jboss.byteman</groupId>
-                 <artifactId>byteman-submit</artifactId>
-                 <version>${project.version}</version>
-                 <classifier>sources</classifier>
-             </dependency>
-             <dependency>
-                 <groupId>org.jboss.byteman</groupId>
-                 <artifactId>byteman-submit</artifactId>
-                 <version>${project.version}</version>
-                 <classifier>javadoc</classifier>
-             </dependency>
-             <dependency>
-                 <groupId>org.jboss.byteman</groupId>
-                 <artifactId>byteman-install</artifactId>
-                 <version>${project.version}</version>
-             </dependency>
-             <dependency>
-                 <groupId>org.jboss.byteman</groupId>
-                 <artifactId>byteman-install</artifactId>
-                 <version>${project.version}</version>
-                 <classifier>sources</classifier>
-             </dependency>
-             <dependency>
-                 <groupId>org.jboss.byteman</groupId>
-                 <artifactId>byteman-install</artifactId>
-                 <version>${project.version}</version>
-                 <classifier>javadoc</classifier>
-             </dependency>
-             <dependency>
-                 <groupId>org.jboss.byteman</groupId>
-                 <artifactId>byteman-sample</artifactId>
-                 <version>${project.version}</version>
-             </dependency>
-             <dependency>
-                 <groupId>org.jboss.byteman</groupId>
-                 <artifactId>byteman-sample</artifactId>
-                 <version>${project.version}</version>
-                 <classifier>sources</classifier>
-             </dependency>
-             <dependency>
-                 <groupId>org.jboss.byteman</groupId>
-                 <artifactId>byteman-sample</artifactId>
-                 <version>${project.version}</version>
-                 <classifier>javadoc</classifier>
-             </dependency>
-             <dependency>
-                 <groupId>org.jboss.byteman</groupId>
-                 <artifactId>byteman-bmunit</artifactId>
-                 <version>${project.version}</version>
-             </dependency>
-             <dependency>
-                 <groupId>org.jboss.byteman</groupId>
-                 <artifactId>byteman-bmunit</artifactId>
-                 <version>${project.version}</version>
-                 <classifier>sources</classifier>
-             </dependency>
-             <dependency>
-                 <groupId>org.jboss.byteman</groupId>
-                 <artifactId>byteman-bmunit</artifactId>
-                 <version>${project.version}</version>
-                 <classifier>javadoc</classifier>
-             </dependency>
-             <dependency>
-                 <groupId>org.jboss.byteman</groupId>
-                 <artifactId>byteman-dtest</artifactId>
-                 <version>${project.version}</version>
-             </dependency>
-             <dependency>
-                 <groupId>org.jboss.byteman</groupId>
-                 <artifactId>byteman-dtest</artifactId>
-                 <version>${project.version}</version>
-                 <classifier>sources</classifier>
-             </dependency>
-             <dependency>
-                 <groupId>org.jboss.byteman</groupId>
-                 <artifactId>byteman-dtest</artifactId>
-                 <version>${project.version}</version>
-                 <classifier>javadoc</classifier>
-             </dependency>
-             <dependency>
-                 <groupId>org.jboss.byteman</groupId>
-                 <artifactId>byteman-jboss-modules-plugin</artifactId>
-                 <version>${project.version}</version>
-             </dependency>
-             <dependency>
-                 <groupId>org.jboss.byteman</groupId>
-                 <artifactId>byteman-jboss-modules-plugin</artifactId>
-                 <version>${project.version}</version>
-                 <classifier>sources</classifier>
-             </dependency>
-             <dependency>
-                 <groupId>org.jboss.byteman</groupId>
-                 <artifactId>byteman-jboss-modules-plugin</artifactId>
-                 <version>${project.version}</version>
-                 <classifier>javadoc</classifier>
-             </dependency>
+            <dependency>
+                <groupId>org.jboss.byteman</groupId>
+                <artifactId>byteman-submit</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.byteman</groupId>
+                <artifactId>byteman-submit</artifactId>
+                <version>${project.version}</version>
+                <classifier>sources</classifier>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.byteman</groupId>
+                <artifactId>byteman-submit</artifactId>
+                <version>${project.version}</version>
+                <classifier>javadoc</classifier>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.byteman</groupId>
+                <artifactId>byteman-install</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.byteman</groupId>
+                <artifactId>byteman-install</artifactId>
+                <version>${project.version}</version>
+                <classifier>sources</classifier>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.byteman</groupId>
+                <artifactId>byteman-install</artifactId>
+                <version>${project.version}</version>
+                <classifier>javadoc</classifier>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.byteman</groupId>
+                <artifactId>byteman-sample</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.byteman</groupId>
+                <artifactId>byteman-sample</artifactId>
+                <version>${project.version}</version>
+                <classifier>sources</classifier>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.byteman</groupId>
+                <artifactId>byteman-sample</artifactId>
+                <version>${project.version}</version>
+                <classifier>javadoc</classifier>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.byteman</groupId>
+                <artifactId>byteman-bmunit</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.byteman</groupId>
+                <artifactId>byteman-bmunit</artifactId>
+                <version>${project.version}</version>
+                <classifier>sources</classifier>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.byteman</groupId>
+                <artifactId>byteman-bmunit</artifactId>
+                <version>${project.version}</version>
+                <classifier>javadoc</classifier>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.byteman</groupId>
+                <artifactId>byteman-dtest</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.byteman</groupId>
+                <artifactId>byteman-dtest</artifactId>
+                <version>${project.version}</version>
+                <classifier>sources</classifier>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.byteman</groupId>
+                <artifactId>byteman-dtest</artifactId>
+                <version>${project.version}</version>
+                <classifier>javadoc</classifier>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.byteman</groupId>
+                <artifactId>byteman-jboss-modules-plugin</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.byteman</groupId>
+                <artifactId>byteman-jboss-modules-plugin</artifactId>
+                <version>${project.version}</version>
+                <classifier>sources</classifier>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.byteman</groupId>
+                <artifactId>byteman-jboss-modules-plugin</artifactId>
+                <version>${project.version}</version>
+                <classifier>javadoc</classifier>
+            </dependency>
 
-             <!-- External dependencies -->
+            <!-- External dependencies -->
             <dependency>
-                 <groupId>org.ow2.asm</groupId>
-                 <artifactId>asm</artifactId>
-                 <version>${asm.version}</version>
+                <groupId>org.ow2.asm</groupId>
+                <artifactId>asm</artifactId>
+                <version>${asm.version}</version>
             </dependency>
             <dependency>
-                 <groupId>org.ow2.asm</groupId>
-                 <artifactId>asm-tree</artifactId>
-                 <version>${asm.version}</version>
+                <groupId>org.ow2.asm</groupId>
+                <artifactId>asm-tree</artifactId>
+                <version>${asm.version}</version>
             </dependency>
             <dependency>
-                 <groupId>org.ow2.asm</groupId>
-                 <artifactId>asm-analysis</artifactId>
-                 <version>${asm.version}</version>
+                <groupId>org.ow2.asm</groupId>
+                <artifactId>asm-analysis</artifactId>
+                <version>${asm.version}</version>
             </dependency>
             <dependency>
-                 <groupId>org.ow2.asm</groupId>
-                 <artifactId>asm-commons</artifactId>
-                 <version>${asm.version}</version>
+                <groupId>org.ow2.asm</groupId>
+                <artifactId>asm-commons</artifactId>
+                <version>${asm.version}</version>
             </dependency>
-             <dependency>
-                 <groupId>net.sf.squirrel-sql.thirdparty-non-maven</groupId>
-                 <artifactId>java-cup</artifactId>
-                 <version>0.11a</version>
-             </dependency>
             <dependency>
-                 <groupId>de.jflex</groupId>
-                 <artifactId>jflex</artifactId>
-                 <version>1.4.3</version>
+                <groupId>net.sf.squirrel-sql.thirdparty-non-maven</groupId>
+                <artifactId>java-cup</artifactId>
+                <version>0.11a</version>
             </dependency>
-             <dependency>
-                 <groupId>junit</groupId>
-                 <artifactId>junit</artifactId>
-                 <version>4.8.2</version>
-             </dependency>
-             <dependency>
-                 <groupId>org.testng</groupId>
-                 <artifactId>testng</artifactId>
-                 <version>6.8.5</version>
-             </dependency>
+            <dependency>
+                <groupId>de.jflex</groupId>
+                <artifactId>jflex</artifactId>
+                <version>1.4.3</version>
+            </dependency>
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>4.8.2</version>
+            </dependency>
+            <dependency>
+                <groupId>org.testng</groupId>
+                <artifactId>testng</artifactId>
+                <version>6.8.5</version>
+            </dependency>
 
         </dependencies>
     </dependencyManagement>
@@ -333,7 +334,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>3.0.0</version>
+                    <version>3.0.1</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -411,7 +412,10 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <configuration>
-                  <attach>true</attach>
+                    <attach>true</attach>
+                    <additionalOptions>
+                        <additionalOption>-Xdoclint:none</additionalOption>
+                    </additionalOptions>
                 </configuration>
                 <executions>
                     <execution>
@@ -443,92 +447,92 @@
     </modules>
 
     <profiles>
-      <profile>
-        <!-- normally tools jar is in ../lib/tools.jar -->
-        <id>default-toolsjar-profile</id>
-        <activation>
-          <file>
-            <exists>${java.home}/../lib/tools.jar</exists>
-          </file>
-        </activation>
-        <properties>
-          <tools.jar>${java.home}/../lib/tools.jar</tools.jar>
-        </properties>
-      </profile>
-      <!-- We override the tools.jar property on mac osx -->
-      <profile>
-        <!-- on pre-jdk7 mac releases tools jar is in ../Classes/classes.jar -->
-        <id>mac-toolsjar-profile</id>
-        <activation>
-          <file>
-            <exists>${java.home}/../Classes/classes.jar</exists>
-          </file>
-        </activation>
-        <properties>
-          <tools.jar>${java.home}/../Classes/classes.jar</tools.jar>
-        </properties>
-      </profile>
-      <!--
-	  new profile for releasing to maven central
-	  to do a release update the version number from a SNAPSHOT
-	  version to a full version and execute
-	  
-	    mvn -P centralRelease deploy
+        <profile>
+            <!-- normally tools jar is in ../lib/tools.jar -->
+            <id>default-toolsjar-profile</id>
+            <activation>
+                <file>
+                    <exists>${java.home}/../lib/tools.jar</exists>
+                </file>
+            </activation>
+            <properties>
+                <tools.jar>${java.home}/../lib/tools.jar</tools.jar>
+            </properties>
+        </profile>
+        <!-- We override the tools.jar property on mac osx -->
+        <profile>
+            <!-- on pre-jdk7 mac releases tools jar is in ../Classes/classes.jar -->
+            <id>mac-toolsjar-profile</id>
+            <activation>
+                <file>
+                    <exists>${java.home}/../Classes/classes.jar</exists>
+                </file>
+            </activation>
+            <properties>
+                <tools.jar>${java.home}/../Classes/classes.jar</tools.jar>
+            </properties>
+        </profile>
+        <!--
+        new profile for releasing to maven central
+        to do a release update the version number from a SNAPSHOT
+        version to a full version and execute
 
-	  you will need to have permission to upload the jars to
-	  the sonatype repo and to have configured the relevant gpg
-	  key settings in ~/.m2/settings.xml
+          mvn -P centralRelease deploy
 
-            <profile>
-              <id>centralRelease</id>
-              <properties>
-                  <gpg.passphrase>XXXXXXXXXX</gpg.passphrase>
-              </properties>
-            </profile>
+        you will need to have permission to upload the jars to
+        the sonatype repo and to have configured the relevant gpg
+        key settings in ~/.m2/settings.xml
 
-       you will also need to include a user name and
-       password entry for the nexus server and the nexus
-       snapshot server - note that the ids must match the
-       ones used in the repositories section of this pom
+              <profile>
+                <id>centralRelease</id>
+                <properties>
+                    <gpg.passphrase>XXXXXXXXXX</gpg.passphrase>
+                </properties>
+              </profile>
 
-            <servers>
-              <server>
-                <id>sonatype-releases-repository</id>
-                <username>NNNNNNNN</username>
-                <password>PPPPPPPP</password>
-              </server>
-              <server>
-                <id>sonatype-snapshots-repository</id>
-                <username>NNNNNNNN</username>
-                <password>PPPPPPPP</password>
-              </server>
-           </servers>
-      -->
-      <profile>
-          <id>centralRelease</id>
-          <!-- we need to be able to sign the jars we install -->
-          <build>
-              <plugins>
-                  <plugin>
-                      <groupId>org.apache.maven.plugins</groupId>
-                      <artifactId>maven-gpg-plugin</artifactId>
-                      <version>1.5</version>
-                      <configuration>
-                          <passphrase>${gpg.passphrase}</passphrase>
-                          <useAgent>${gpg.useAgent}</useAgent>
-                      </configuration>
-                      <executions>
-                          <execution>
-                              <id>sign-artifacts</id>
-                              <phase>verify</phase>
-                              <goals>
-                                  <goal>sign</goal>
-                              </goals>
-                          </execution>
-                      </executions>
-                  </plugin>
-              </plugins>
-          </build>
-      </profile>
+         you will also need to include a user name and
+         password entry for the nexus server and the nexus
+         snapshot server - note that the ids must match the
+         ones used in the repositories section of this pom
+
+              <servers>
+                <server>
+                  <id>sonatype-releases-repository</id>
+                  <username>NNNNNNNN</username>
+                  <password>PPPPPPPP</password>
+                </server>
+                <server>
+                  <id>sonatype-snapshots-repository</id>
+                  <username>NNNNNNNN</username>
+                  <password>PPPPPPPP</password>
+                </server>
+             </servers>
+        -->
+        <profile>
+            <id>centralRelease</id>
+            <!-- we need to be able to sign the jars we install -->
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.5</version>
+                        <configuration>
+                            <passphrase>${gpg.passphrase}</passphrase>
+                            <useAgent>${gpg.useAgent}</useAgent>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
     </profiles>
 </project>

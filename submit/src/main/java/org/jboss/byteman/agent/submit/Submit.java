@@ -811,7 +811,7 @@ public class Submit {
     }
 
     private String findClass(String className) throws Exception {
-        return submitRequest("FINDCLASS\n" + className);
+        return submitRequest("FINDCLASS\n" + className +"\n");
     }
 
     private class Comm {
