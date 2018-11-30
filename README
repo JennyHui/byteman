@@ -1,3 +1,8 @@
+Forked From ByteMan, add following features：
+
+1. Add bmsubmit -g options， open groovy console on sshd port 7789
+2. Add bmsubmit -f options, find loaded classes's full classname, which is very useful when classes enhenced by cglib
+
 Byteman README
 --------------
 
